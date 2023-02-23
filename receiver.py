@@ -9,13 +9,13 @@ def listener():
         print(data)
         if data.decode() == "xxx":
             print("new frame")
-        msgList.append(data.decode())
-        print(msgList)
+        msgList.append(data)
+        #print(msgList)
 
 def reconstruct():
     if msgList:
+        # print(len(msgList))
         pass
-        # print(msgList)
 
 IP = "127.0.0.1"
 PORT = 5005
