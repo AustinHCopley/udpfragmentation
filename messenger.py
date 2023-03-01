@@ -19,23 +19,15 @@ class Fragment():
         self.sock.sendto("xxx".encode(), (self.ip, self.port))
 
 
-IP = "127.0.0.1"
-PORT = 5005
-PACKSIZE = 6000
-
 def main():
+    frag = Fragment()
+
     cap = cv2.VideoCapture(0)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
     ret, frame = cap.read()
-
     data = np.array(frame)
     string_data = data.tobytes()
-    framesize = getsizeof(string_data)
-    # split the frame into 6KB datagrams
-    for x in range( framesize // PACKSIZE + 1 ):
-        sock.sendto(string_data[x*PACKSIZE : x*PACKSIZE+PACKSIZE], (IP, PORT))
-    sock.sendto("xxx".encode(), (IP, PORT))
+
+    frag.fragment(string_data)
 
 
 if __name__ == "__main__":
