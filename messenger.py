@@ -8,7 +8,7 @@ class Fragment():
     def __init__(self, ip="127.0.0.1", port=5005, packsize=6000):
         self.ip = ip
         self.port = port
-        self.packsize=6000
+        self.packsize = packsize
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def fragment(self, data):
@@ -37,8 +37,6 @@ def main():
         sock.sendto(string_data[x*PACKSIZE : x*PACKSIZE+PACKSIZE], (IP, PORT))
     sock.sendto("xxx".encode(), (IP, PORT))
 
-
-    #sock.sendto(string_data[:6000], (IP, PORT))
 
 if __name__ == "__main__":
     main()
