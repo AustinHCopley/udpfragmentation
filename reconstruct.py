@@ -1,7 +1,7 @@
 import socket
 import threading
 import cv2
-import pickle
+from pickle import loads
 
 class Reconstruct():
     """listen for messages over udp port and reconstruct them back into the original images"""
@@ -22,7 +22,7 @@ class Reconstruct():
     def reconstruct(self):
         while True:
             if self.data is not None:
-                data = pickle.loads(self.data)
+                data = loads(self.data)
                 image = cv2.imdecode(data, flags=cv2.IMREAD_COLOR)
                 cv2.imshow("image test", image)
                 cv2.waitKey(30)

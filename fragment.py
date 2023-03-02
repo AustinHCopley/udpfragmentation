@@ -1,6 +1,6 @@
 import socket
 import cv2
-import pickle
+from pickle import dumps
 from sys import getsizeof
 
 class Fragment():
@@ -28,8 +28,8 @@ def main():
     while ret:
         ret, frame = cap.read()
 
-        ret2, buff = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 30])
-        string_data = pickle.dumps(buff)
+        _, buff = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 30])
+        string_data = dumps(buff)
         frag.fragment(string_data)
 
 
