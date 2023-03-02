@@ -1,28 +1,35 @@
 import socket
 import cv2
+import numpy as np
+from sys import getsizeof
 
-IP = "127.0.0.1"
-PORT = 5005
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-MSGSIZE = 5000000
+class Fragment():
+    """fragment an opencv image into smaller datagrams, and send them via udp port"""
+    def __init__(self, ip="127.0.0.1", port=5005, packsize=6000):
+        self.ip = ip
+        self.port = port
+        self.packsize = packsize
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-def fragment(message, packsize):
-    packets = []
-    for i in range(0, len(message), packsize):
-        packet = message[i:i+packsize]
-        packets.append(packet)
-    return packets
+    def fragment(self, data):
+        framesize = getsizeof(data)
+        # split the frame into 6KB datagrams
+        for x in range( framesize // self.packsize + 1 ):
+            self.sock.sendto(data[x*self.packsize : x*self.packsize+self.packsize], (self.ip, self.port))
+        self.sock.sendto("xxx".encode(), (self.ip, self.port))
 
-def reconstruct(packets):
-    message = "".join(packets)
-    return message
+
+def main():
+    frag = Fragment()
+
+    cap = cv2.VideoCapture(0)
+    ret, frame = cap.read()
+
+    ret, buff = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 30])
+    string_data = buff.tobytes()
+    print(getsizeof(string_data))
+    frag.fragment(string_data)
+
 
 if __name__ == "__main__":
-    msg = "test message iiiiiiiiiiiiiiiiiiiiiiiouiouiouiouiouiouiouiouiouiouiouiouiouiouiouiouiouiouioui"
-    packet_size = 10
-
-    # while True:
-    packets = fragment(msg, packet_size)
-    for packet in packets:
-        sock.sendto(packet.encode(), (IP, PORT))
-        print("Sent packet: ", packet)
+    main()
