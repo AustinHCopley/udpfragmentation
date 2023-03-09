@@ -32,6 +32,8 @@ def main():
         string_data = dumps(buff)
         frag.fragment(string_data)
 
+    cap.release()
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()

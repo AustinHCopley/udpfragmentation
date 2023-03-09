@@ -26,6 +26,7 @@ class Reconstruct():
                 image = cv2.imdecode(data, flags=cv2.IMREAD_COLOR)
                 cv2.imshow("image test", image)
                 cv2.waitKey(30)
+        cv2.destroyAllWindows()
 
 
 def main():
